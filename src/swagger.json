@@ -1,0 +1,21 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "my academlo restaurant",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/user": {
+            "get":{
+                "description": "make a get from users",
+                "tags":["users"],
+                "security":[{
+                    "jwt_token": []
+                }],
+                "responses":{
+                    "200":"users obtain succesfully"
+                }
+            }
+        }
+    }
+}

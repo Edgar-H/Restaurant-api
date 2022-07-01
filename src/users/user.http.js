@@ -1,6 +1,6 @@
 const userControllers = require('./users.controllers')
 const { toPromise } = require('../utils/toPromise');
-
+const config = require('../config')
 // todo:
 //? get /users ADMIN
 //? get /users/:id ADMIN
@@ -17,20 +17,18 @@ const { toPromise } = require('../utils/toPromise');
 
 const getAllUsers = async (req, res) => {
    //!cambiar por authAdmin en dado caso
-    // if (req.user.rol) {
-    //     res.status(401).json({
-    //         status: 401,
-    //         message: `You dont have clerance`
-    //     })
-    // }
-    // if (req.user.rol !== 'admin') {
-    //     res.status(401).json({
-    //         status: 401,
-    //         message: `You dont have clerance`,
-    //     });
-    // }
-    const user = await toPromise(userControllers.getAllUsers());
-    res.status(200).json(user);
+    const user = await toPromise(
+        userControllers.paginatedUser()
+    );
+    res.status(200).json({
+            _links: {
+                "base": `${config.domainHost}${config.port}/users`,
+                "next": '/page?limit=5&start=5',
+                "prev": ""
+                // self: 'http://localhost:8080/directors/page'
+        },
+        results: user
+        });
 }
 
 const getUserById = async (req, res) => {
@@ -59,6 +57,8 @@ const deleteUser = async (req, res) => {
     }
     res.status(200).json({ message: 'all good' });
 }
+
+
 
 module.exports = {
     getAllUsers,

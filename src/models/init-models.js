@@ -14,12 +14,13 @@ var _payments = require("./payments");
 var _roles = require("./roles");
 var _users = require("./users");
 var _vehicles = require("./vehicles");
-
+var _verify_tokens = require("./verify_tokens");
 
 const Sequelize = require('sequelize');
-require('dotenv').config()
+require('dotenv').config();
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config');
+
 const configObj = config[env];
 
 let sequelize;
@@ -54,6 +55,7 @@ function initModels() {
   var roles = _roles(sequelize, DataTypes);
   var users = _users(sequelize, DataTypes);
   var vehicles = _vehicles(sequelize, DataTypes);
+  var verify_tokens = _verify_tokens(sequelize, DataTypes);
 
   menu_items.belongsToMany(orders, { as: 'order_uuid_orders', through: order_items, foreignKey: "menu_item_id", otherKey: "order_uuid" });
   orders.belongsToMany(menu_items, { as: 'menu_item_id_menu_items', through: order_items, foreignKey: "order_uuid", otherKey: "menu_item_id" });
@@ -91,6 +93,8 @@ function initModels() {
   users.hasMany(orders, { as: "orders", foreignKey: "user_uuid"});
   payments.belongsTo(users, { as: "user_uu", foreignKey: "user_uuid"});
   users.hasMany(payments, { as: "payments", foreignKey: "user_uuid"});
+  verify_tokens.belongsTo(users, { as: "user", foreignKey: "user_id"});
+  users.hasMany(verify_tokens, { as: "verify_tokens", foreignKey: "user_id"});
   deliveries.belongsTo(vehicles, { as: "vehicle_uu", foreignKey: "vehicle_uuid"});
   vehicles.hasMany(deliveries, { as: "deliveries", foreignKey: "vehicle_uuid"});
 
@@ -110,8 +114,9 @@ function initModels() {
     roles,
     users,
     vehicles,
+    verify_tokens,
   };
 }
-
+module.exports = initModels;
 module.exports.initModels = initModels;
-module.exports.sequelize = sequelize
+module.exports.default = initModels;

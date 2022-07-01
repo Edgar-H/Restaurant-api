@@ -1,7 +1,7 @@
 //!DEPENDENCIAS
 const  uuid = require('uuid')
 const crypto = require('../utils/crypto')
-const users = require('../models/init-models').initModels().users
+const {users} = require('../models/init-models').initModels()
 
 
 //CUALQUIER USUARIO
@@ -75,6 +75,41 @@ const editUser = async (id, data) => {
     }
 }
 
+const verifiedUser = async (id) => {
+    const user = await users.update({
+            verified: true
+        },{
+        where: {
+            id,
+        },
+    }
+        
+    );
+    return {
+        message: `User with id: ${id} eddited succesfully.`,
+        user: user,
+    };
+};
+
+const paginatedUser = async (offset, limit) => {
+    if(offset){
+    const data = await users.findAll({
+        limit: 5,
+        offset
+    });
+        return data;
+    } else if(limit) {
+        const data = await users.findAll({
+            limit,
+            offset
+        });
+        return data
+    } else {
+        const data = await users.findAll();
+        return data;
+    }
+    
+};
 //!FORMA ANTERIOR
 // const editUser = (id, data) => {
 //     const index = models.users.findIndex((item) => item.id === id);
@@ -91,12 +126,16 @@ const editUser = async (id, data) => {
 //     return;
 // }
 
+//? Funcion de generacion para tokens provisionales de 8 caracteres
+
 module.exports = {
     registerUser,
     getAllUsers,
     getUserById,
     deleteUser,
-    editUser
+    editUser,
+    verifiedUser,
+    paginatedUser
 };
 // await modeloEquipo.update({
 // body_a_actualizar:asdasdasd}, {
