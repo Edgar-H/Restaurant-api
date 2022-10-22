@@ -19,7 +19,7 @@ var _verify_tokens = require("./verify_tokens");
 const Sequelize = require('sequelize');
 require('dotenv').config();
 const env = process.env.NODE_ENV || 'development';
-const config = require('../config/config');
+const config = require('../config/config.js');
 
 const configObj = config[env];
 
