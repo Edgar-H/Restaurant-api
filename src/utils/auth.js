@@ -9,6 +9,7 @@ module.exports = (passport) => {
         jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
         secretOrKey: config.jwtSecret, // debe estar en una variable de entorno
     };
+    console.log('opts', opts);
     passport.use(
         new JwtStrategy(opts, (decoded, done) => {
             console.log('decoded jwt', decoded);
